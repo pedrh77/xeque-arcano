@@ -20,6 +20,7 @@ export function ChessBoard() {
   const lastMove = useGameStore((state) => state.lastMove);
   const effects = useGameStore((state) => state.effects);
   const pending = useGameStore((state) => state.pendingAction);
+  const reducedMotion = useGameStore((state) => state.reducedMotion);
   const selectSquare = useGameStore((state) => state.selectSquare);
   const targets = useLegalTargets();
   const chess = new Chess(fen);
@@ -57,10 +58,12 @@ export function ChessBoard() {
               {coordinates && ((flipped ? rank === 7 : rank === 0)) && <span className="coord file">{square[0]}</span>}
               {piece && (
                 <motion.span
-                  layoutId={`piece-${piece.color}-${piece.type}-${square}`}
+                  key={`${piece.color}-${piece.type}-${square}`}
                   className={`piece piece-${piece.color}`}
                   aria-hidden="true"
-                  transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                  initial={!reducedMotion && lastMove?.to === square ? { opacity: 0, scale: .55, filter: "blur(4px)" } : false}
+                  animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                  transition={{ type: "spring", duration: .3, bounce: 0 }}
                 >
                   {PIECES[piece.color][piece.type]}
                 </motion.span>

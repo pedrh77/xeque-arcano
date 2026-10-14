@@ -21,7 +21,8 @@ export function chooseAiAction(fen: string, difficulty: Difficulty, abilities: A
   });
 
   const available = abilities.filter((ability) => ability.usesLeft > 0);
-  if (available.length && Math.random() < (difficulty === "easy" ? 0.16 : difficulty === "medium" ? 0.3 : 0.45)) {
+  const powerChance = difficulty === "easy" ? 0.42 : difficulty === "medium" ? 0.62 : 0.82;
+  if (available.length && (!moves.length || Math.random() < powerChance)) {
     const ordered = difficulty === "hard" ? available : [...available].sort(() => Math.random() - 0.5);
     for (const ability of ordered) {
       const ownSquares = SQUARES.filter((square) => chess.get(square)?.color === chess.turn()).sort(() => Math.random() - 0.5);

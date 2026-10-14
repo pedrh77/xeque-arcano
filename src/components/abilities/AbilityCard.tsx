@@ -24,7 +24,9 @@ export function AbilityCard({ ability, selected, onSelect, compact }: Props) {
       className={`ability-card rarity-${rarityClass} ${selected ? "is-selected" : ""} ${compact ? "is-compact" : ""}`}
       onClick={onSelect}
       disabled={disabled || !onSelect}
-      whileTap={!disabled ? { scale: 0.98 } : undefined}
+      animate={selected ? { y: -2, scale: 1.02 } : { y: 0, scale: 1 }}
+      transition={{ type: "spring", duration: .3, bounce: 0 }}
+      whileTap={!disabled ? { scale: 0.96 } : undefined}
       aria-pressed={selected}
       aria-label={`${definition.name}. ${definition.description}. ${ability.usesLeft} uso restante.`}
     >

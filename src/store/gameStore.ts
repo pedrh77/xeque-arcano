@@ -118,11 +118,32 @@ export const useGameStore = create<GameState>()(persist((set, get) => ({
         if (evolved.ok && evolved.fen) { set((latest) => ({ fen: evolved.fen!, modifiers: { ...latest.modifiers, [color]: latest.modifiers[color].map((item) => item.id === card.id ? { ...item, used: true } : item) }, history: addHistory(latest.history, color, `${MODIFIERS[card.id].glyph} Evolução · ${square}`), aiThinking: false, notice: "O rival evoluiu um peão." })); return; }
       }
       const choice = chooseAiAction(current.fen, current.config.difficulty, current.hands[color], current.effects);
-      if (!choice) { set({ aiThinking: false }); return; }
-      const result = choice.special ? executeSpecialAction(current.fen, choice.special, current.effects) : resolveClassicMove(current.fen, choice.move!.from, choice.move!.to, "q", current.effects);
-      if (!result.ok || !result.fen) { set({ aiThinking: false, notice: "O rival perdeu a vez." }); return; }
-      const ability = choice.special?.abilityId; const status = gameStatus(result.fen);
-      set((latest) => ({ fen: result.fen!, effects: result.effects ?? latest.effects, hands: ability ? consumePower(latest.hands, color, ability) : latest.hands, history: addHistory(latest.history, color, result.notation!, ability), captured: result.captured ? [...latest.captured, result.captured] : latest.captured, lastMove: { from: choice.special?.from ?? choice.move!.from, to: choice.special?.to ?? choice.move!.to }, aiThinking: false, notice: ability ? `${ABILITIES[ability].name} usado pelo rival.` : "Sua vez.", ...(status.over ? { screen: "result" as Screen, started: false, result: { title: status.title!, detail: status.detail! } } : {}) }));
+      if (!choice) {
+        const status = gameStatus(current.fen);
+        set({
+          aiThinking: false,
+          notice: undefined,
+          screen: "result",
+          started: false,
+          result: status.over
+            ? { title: status.title!, detail: status.detail! }
+            : { title: "Vitória", detail: "O rival não encontrou uma jogada válida e desistiu." },
+        });
+        return;
+      }
+      try {
+        const result = choice.special ? executeSpecialAction(current.fen, choice.special, current.effects) : resolveClassicMove(current.fen, choice.move!.from, choice.move!.to, "q", current.effects);
+        if (!result.ok || !result.fen) {
+          set({ aiThinking: false, notice: undefined, screen: "result", started: false, result: { title: "Vitória", detail: "O rival não conseguiu completar a jogada e desistiu." } });
+          return;
+        }
+        const ability = choice.special?.abilityId; const status = gameStatus(result.fen);
+        const from = choice.special?.from ?? choice.move?.from;
+        const to = choice.special?.to ?? choice.move?.to;
+        set((latest) => ({ fen: result.fen!, effects: result.effects ?? latest.effects, hands: ability ? consumePower(latest.hands, color, ability) : latest.hands, history: addHistory(latest.history, color, result.notation!, ability), captured: result.captured ? [...latest.captured, result.captured] : latest.captured, lastMove: from && to ? { from, to } : latest.lastMove, aiThinking: false, notice: ability ? `${ABILITIES[ability].name} usado pelo rival.` : "Sua vez.", ...(status.over ? { screen: "result" as Screen, started: false, result: { title: status.title!, detail: status.detail! } } : {}) }));
+      } catch {
+        set({ aiThinking: false, notice: undefined, screen: "result", started: false, result: { title: "Vitória", detail: "O rival encontrou um impasse e desistiu." } });
+      }
     }, state.reducedMotion ? 100 : 560);
   },
   toggleFlip: () => set((state) => ({ flipped: !state.flipped })), setReducedMotion: (reducedMotion) => set({ reducedMotion }), setCoordinates: (coordinates) => set({ coordinates }),
