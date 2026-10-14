@@ -1,0 +1,11 @@
+Use case: stylized-concept
+Asset type: square power-up card artwork for a fantasy chess browser game
+Primary request: create artwork for “Salto da Fenda”, a magical ability that lets any chess piece leap like a knight
+Input images: reference image — match its low-poly faceted chess-piece rendering, energetic cyan crystal magic, dark navy chessboard, dramatic premium game-card finish
+Scene/backdrop: dark navy chessboard in a violet-black atmosphere
+Subject: a white rook erupting upward from one square and landing in an L-shaped leap through a torn cyan dimensional rift, with a clear glowing angular trail across the board
+Style/medium: polished digital illustration, faceted low-poly chess piece, sharp crystalline energy, dynamic fantasy strategy-game key art
+Composition/framing: square, dramatic L-shaped airborne motion, recognisable rook silhouette, readable as a card thumbnail
+Lighting/mood: intense cyan and electric-blue rift light, fast and spectacular
+Color palette: deep navy, violet-black, cyan, electric blue, white
+Constraints: no text, no letters, no numbers, no watermark, no UI border, no logos; exactly one main chess piece

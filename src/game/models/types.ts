@@ -3,12 +3,12 @@ import type { Color, PieceSymbol, Square } from "chess.js";
 export type GameMode = "classic" | "powers";
 export type Opponent = "local" | "computer";
 export type Difficulty = "easy" | "medium" | "hard";
-export type Screen = "menu" | "setup" | "game" | "collection" | "settings" | "result";
+export type Screen = "menu" | "learn" | "setup" | "game" | "collection" | "settings" | "result";
 export type ModifierId = "queen" | "knight" | "rook" | "bishop" | "wild";
 export type AbilityCategory = "Movimento" | "Posicionamento" | "Ataque" | "Defesa" | "Defesa / Ataque";
 export type AbilityRarity = "Comum" | "Rara" | "Épica" | "Lendária";
 export type AbilityTargetType = "piece-destination" | "piece";
-export type AbilityId = "doubleJump" | "ghostStep" | "invertedKnight" | "charge" | "freeMovement" | "teleport" | "diagonalDance" | "kingStep" | "divineShield" | "counterAttack" | "arcaneStrike" | "pawnEcho" | "royalGuard" | "shockwave" | "sacrificeWard" | "phaseDiagonal";
+export type AbilityId = "doubleJump" | "ghostStep" | "invertedKnight" | "charge" | "freeMovement" | "teleport" | "diagonalDance" | "kingStep" | "divineShield" | "counterAttack" | "arcaneStrike" | "pawnEcho" | "royalGuard" | "shockwave" | "sacrificeWard" | "phaseDiagonal" | "mirrorSwap" | "gravityPull" | "aegisLink" | "riftLeap";
 
 export interface AbilityDefinition {
   id: AbilityId;

@@ -153,4 +153,45 @@ describe("habilidades", () => {
     expect(new Chess(result.fen!).get("e5")?.type).toBe("p");
     expect(result.effects).toHaveLength(0);
   });
+
+  it("Troca de Espelhos inverte duas peças aliadas em qualquer distância", () => {
+    const fen = "4k3/8/8/8/3R4/8/7N/4K3 w - - 0 1";
+    const result = executeSpecialAction(fen, { abilityId: "mirrorSwap", from: "d4", to: "h2" });
+    const board = new Chess(result.fen!);
+    expect(result.ok).toBe(true);
+    expect(board.get("d4")?.type).toBe("n");
+    expect(board.get("h2")?.type).toBe("r");
+  });
+
+  it("Poço Gravitacional puxa um inimigo para a casa intermediária", () => {
+    const fen = "4k3/8/8/8/3B1r2/8/8/K7 w - - 0 1";
+    const result = executeSpecialAction(fen, { abilityId: "gravityPull", from: "d4", to: "f4" });
+    const board = new Chess(result.fen!);
+    expect(result.ok).toBe(true);
+    expect(board.get("f4")).toBeUndefined();
+    expect(board.get("e4")?.type).toBe("r");
+  });
+
+  it("Elo da Égide protege uma peça aliada adjacente", () => {
+    const fen = "4k3/8/8/8/3R4/4P3/8/4K3 w - - 0 1";
+    const result = executeSpecialAction(fen, { abilityId: "aegisLink", from: "d4", to: "e3" });
+    expect(result.ok).toBe(true);
+    expect(result.effects?.[0]).toMatchObject({ type: "shield", square: "e3", color: "w" });
+  });
+
+  it("Elo da Égide não pode ignorar um xeque", () => {
+    const fen = "4r1k1/8/8/8/3R4/2P5/8/4K3 w - - 0 1";
+    const result = executeSpecialAction(fen, { abilityId: "aegisLink", from: "d4", to: "c3" });
+    expect(result.ok).toBe(false);
+    expect(result.error).toContain("resposta ao xeque");
+  });
+
+  it("Salto da Fenda move qualquer peça como cavalo", () => {
+    const fen = "4k3/8/8/5p2/3R4/8/8/4K3 w - - 0 1";
+    const result = executeSpecialAction(fen, { abilityId: "riftLeap", from: "d4", to: "f5" });
+    const board = new Chess(result.fen!);
+    expect(result.ok).toBe(true);
+    expect(board.get("f5")?.type).toBe("r");
+    expect(result.captured?.type).toBe("p");
+  });
 });

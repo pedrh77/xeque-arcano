@@ -1,0 +1,11 @@
+Use case: stylized-concept
+Asset type: square power-up card artwork for a fantasy chess browser game
+Primary request: create artwork for “Elo da Égide”, a magical ability that transfers a protective shield to an allied chess piece
+Input images: reference image — match its low-poly faceted chess-piece rendering, energetic cyan crystal magic, dark navy chessboard, dramatic premium game-card finish
+Scene/backdrop: dark navy chessboard in a violet-black atmosphere
+Subject: a white queen channeling a ribbon of cyan energy into a white pawn beside her, forming a luminous crystalline shield dome around the pawn; both pieces clearly allied
+Style/medium: polished digital illustration, faceted low-poly chess pieces, sharp crystalline energy, premium fantasy strategy-game key art
+Composition/framing: square, protective arc joining queen and pawn, readable as a card thumbnail
+Lighting/mood: radiant cyan protection with warm-white star highlights, heroic and tactical
+Color palette: deep navy, violet-black, cyan, electric blue, white
+Constraints: no text, no letters, no numbers, no watermark, no UI border, no logos; exactly two main chess pieces

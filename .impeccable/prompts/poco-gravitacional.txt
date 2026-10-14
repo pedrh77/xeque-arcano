@@ -1,0 +1,11 @@
+Use case: stylized-concept
+Asset type: square power-up card artwork for a fantasy chess browser game
+Primary request: create artwork for “Poço Gravitacional”, a magical ability that pulls an enemy chess piece closer
+Input images: reference image — match its low-poly faceted chess-piece rendering, energetic cyan crystal magic, dark navy chessboard, dramatic premium game-card finish
+Scene/backdrop: dark navy chessboard in a violet-black atmosphere
+Subject: a white bishop firmly anchored while a black rook two squares away is dragged toward it by a spiraling cyan gravity vortex; both silhouettes clearly recognisable
+Style/medium: polished digital illustration, faceted low-poly chess pieces, sharp crystalline energy, dynamic fantasy strategy-game key art
+Composition/framing: square, powerful inward spiral motion, readable as a card thumbnail
+Lighting/mood: intense cyan and electric-blue gravity light, tactical and dramatic
+Color palette: deep navy, violet-black, cyan, electric blue, white and black chess pieces
+Constraints: no text, no letters, no numbers, no watermark, no UI border, no logos; exactly two main chess pieces

@@ -17,4 +17,8 @@ export const ABILITY_ASSETS = {
   shockwave: assetUrl("assets/powers/onda-de-impacto.png"),
   sacrificeWard: assetUrl("assets/powers/pacto-de-protecao.png"),
   phaseDiagonal: assetUrl("assets/powers/corte-espectral.png"),
+  mirrorSwap: assetUrl("assets/powers/troca-de-espelhos.png"),
+  gravityPull: assetUrl("assets/powers/poco-gravitacional.png"),
+  aegisLink: assetUrl("assets/powers/elo-da-egide.png"),
+  riftLeap: assetUrl("assets/powers/salto-da-fenda.png"),
 } as const;

@@ -59,7 +59,7 @@ export const useGameStore = create<GameState>()(persist((set, get) => ({
     pendingAction: undefined, lastMove: undefined, hands: { w: makeHand(), b: makeHand() },
     modifiers: { w: modifierHand(state.config.selectedModifiers ?? DEFAULT_MODIFIERS), b: modifierHand(randomModifiers()) },
     effects: [], history: [], captured: [], result: undefined, aiThinking: false,
-    notice: "Mova, use um poder ou evolua um peão.", flipped: state.config.playerColor === "b",
+    notice: "Mova, use um poder ou evolua um peão.", flipped: state.config.opponent === "computer" && state.config.playerColor === "b",
     stats: { ...state.stats, games: state.stats.games + 1 },
   })),
   resumeGame: () => set({ screen: "game" }),
@@ -111,7 +111,12 @@ export const useGameStore = create<GameState>()(persist((set, get) => ({
     if (state.config.opponent !== "computer" || chess.turn() === state.config.playerColor || state.screen !== "game" || state.aiThinking) return;
     set({ aiThinking: true, notice: "O rival calcula…" });
     window.setTimeout(() => {
-      const current = get(); const before = new Chess(current.fen); const color = before.turn();
+      const current = get(); const settled = gameStatus(current.fen);
+      if (settled.over) {
+        set({ aiThinking: false, notice: undefined, screen: "result", started: false, result: { title: settled.title!, detail: settled.detail! } });
+        return;
+      }
+      const before = new Chess(current.fen); const color = before.turn();
       const unused = current.modifiers[color].filter((item) => !item.used); const pawns = SQUARES.filter((sq) => before.get(sq)?.color === color && before.get(sq)?.type === "p");
       if (unused.length && pawns.length && Math.random() < .28) {
         const card = unused[Math.floor(Math.random() * unused.length)]; const square = pawns[Math.floor(Math.random() * pawns.length)]; const evolved = transformPawn(current.fen, square, MODIFIERS[card.id].type);

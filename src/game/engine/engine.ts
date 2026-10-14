@@ -233,6 +233,47 @@ export function executeSpecialAction(fen: string, action: SpecialAction, effects
 
   if (!action.to) return { ok: false, error: "Escolha uma casa de destino." };
   const target = board.get(action.to);
+
+  if (action.abilityId === "mirrorSwap") {
+    if (!target || target.color !== actor || target.type === "k" || piece.type === "k" || action.to === action.from) {
+      return { ok: false, error: "Escolha duas peças aliadas que não sejam reis." };
+    }
+    board.set(action.from, target);
+    board.set(action.to, piece);
+    if (!kingSafe(board, fen, actor)) return { ok: false, error: "A troca deixaria seu rei ameaçado." };
+    return { ok: true, fen: nextFen(board, fen, enemy(actor)), notation: `Troca de Espelhos · ${action.from} ↔ ${action.to}`, effects };
+  }
+
+  if (action.abilityId === "aegisLink") {
+    if (!target || target.color !== actor || action.to === action.from || Math.max(...delta(action.from, action.to).map(Math.abs)) !== 1) {
+      return { ok: false, error: "Escolha uma peça aliada adjacente." };
+    }
+    if (!kingSafe(board, fen, actor)) return { ok: false, error: "O elo não pode substituir uma resposta ao xeque." };
+    const withoutOld = effects.filter((effect) => effect.square !== action.to);
+    return {
+      ok: true,
+      fen: nextFen(board, fen, enemy(actor)),
+      notation: `Elo da Égide · ${action.from} → ${action.to}`,
+      effects: [...withoutOld, { id: `shield-${Date.now()}`, type: "shield", square: action.to, color: actor }],
+    };
+  }
+
+  if (action.abilityId === "gravityPull") {
+    const [dx, dy] = delta(action.from, action.to);
+    const ax = Math.abs(dx);
+    const ay = Math.abs(dy);
+    const alignedAtTwo = Math.max(ax, ay) === 2 && (dx === 0 || dy === 0 || ax === ay);
+    const [fx, fy] = coords(action.from);
+    const pulledTo = squareAt(fx + Math.sign(dx), fy + Math.sign(dy));
+    if (!target || target.color === actor || target.type === "k" || !alignedAtTwo || !pulledTo || board.has(pulledTo)) {
+      return { ok: false, error: "Escolha um inimigo a duas casas com espaço livre entre vocês." };
+    }
+    board.delete(action.to);
+    board.set(pulledTo, target);
+    if (!kingSafe(board, fen, actor)) return { ok: false, error: "O puxão deixaria seu rei ameaçado." };
+    return { ok: true, fen: nextFen(board, fen, enemy(actor)), notation: `Poço Gravitacional · ${action.to} → ${pulledTo}`, effects };
+  }
+
   if (target?.color === actor) {
     if (!(["invertedKnight", "kingStep"] as AbilityId[]).includes(action.abilityId)) return { ok: false, error: "O destino contém uma peça aliada." };
   }
@@ -299,6 +340,9 @@ export function executeSpecialAction(fen: string, action: SpecialAction, effects
     }
     case "phaseDiagonal":
       valid = ax === ay && ax > 0;
+      break;
+    case "riftLeap":
+      valid = (ax === 1 && ay === 2) || (ax === 2 && ay === 1);
       break;
     case "invertedKnight":
       valid = Boolean(target && target.color === actor && ((ax === 1 && ay === 2) || (ax === 2 && ay === 1)));
