@@ -10,9 +10,10 @@ import { MODIFIERS, useGameStore } from "./store/gameStore";
 import { assetUrl } from "./config/assets";
 import { TUTORIALS } from "./game/tutorials";
 import { TutorialBoard } from "./components/tutorial/TutorialBoard";
+import { ChessPiece } from "./components/board/ChessPiece";
 
 function Brand() {
-  return <div className="brand"><span className="brand-gem">♙</span><span><strong>PAWN</strong><em>STORM</em></span></div>;
+  return <div className="brand"><span className="brand-gem"><ChessPiece type="p" color="b" className="brand-piece" /></span><span><strong>PAWN</strong><em>STORM</em></span></div>;
 }
 
 function Menu() {

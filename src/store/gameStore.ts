@@ -10,12 +10,12 @@ import { assetUrl } from "../config/assets";
 
 export const POWER_START_FEN = "4k3/pppppppp/8/8/8/8/PPPPPPPP/4K3 w - - 0 1";
 
-export const MODIFIERS: Record<ModifierId, { name: string; glyph: string; image: string; type: "q" | "r" | "b" | "n"; description: string }> = {
-  queen: { name: "Coroa da Rainha", glyph: "♕", image: assetUrl("assets/modifiers/queen.png"), type: "q", description: "Transforma um peão em rainha." },
-  knight: { name: "Salto do Cavalo", glyph: "♘", image: assetUrl("assets/modifiers/knight.png"), type: "n", description: "Transforma um peão em cavalo." },
-  rook: { name: "Muralha da Torre", glyph: "♖", image: assetUrl("assets/modifiers/rook.png"), type: "r", description: "Transforma um peão em torre." },
-  bishop: { name: "Olhar do Bispo", glyph: "♗", image: assetUrl("assets/modifiers/bishop.png"), type: "b", description: "Transforma um peão em bispo." },
-  wild: { name: "Coringa Arcano", glyph: "✦", image: assetUrl("assets/modifiers/wild.png"), type: "q", description: "Transforma um peão em rainha instável." },
+export const MODIFIERS: Record<ModifierId, { name: string; image: string; type: "q" | "r" | "b" | "n"; description: string }> = {
+  queen: { name: "Coroa da Rainha", image: assetUrl("assets/modifiers/queen.png"), type: "q", description: "Transforma um peão em rainha." },
+  knight: { name: "Salto do Cavalo", image: assetUrl("assets/modifiers/knight.png"), type: "n", description: "Transforma um peão em cavalo." },
+  rook: { name: "Muralha da Torre", image: assetUrl("assets/modifiers/rook.png"), type: "r", description: "Transforma um peão em torre." },
+  bishop: { name: "Olhar do Bispo", image: assetUrl("assets/modifiers/bishop.png"), type: "b", description: "Transforma um peão em bispo." },
+  wild: { name: "Coringa Arcano", image: assetUrl("assets/modifiers/wild.png"), type: "q", description: "Transforma um peão em rainha instável." },
 };
 
 const DEFAULT_MODIFIERS: ModifierId[] = ["queen", "knight", "rook"];
@@ -77,7 +77,7 @@ export const useGameStore = create<GameState>()(persist((set, get) => ({
       const result = transformPawn(state.fen, square, MODIFIERS[state.selectedModifier].type);
       if (!result.ok || !result.fen) return { notice: result.error };
       const modifier = state.selectedModifier;
-      return { fen: result.fen, modifiers: { ...state.modifiers, [turn]: state.modifiers[turn].map((item) => item.id === modifier ? { ...item, used: true } : item) }, history: addHistory(state.history, turn, `${MODIFIERS[modifier].glyph} ${MODIFIERS[modifier].name} · ${square}`), selectedModifier: undefined, selectedSquare: undefined, notice: `${MODIFIERS[modifier].name} ativada.` };
+      return { fen: result.fen, modifiers: { ...state.modifiers, [turn]: state.modifiers[turn].map((item) => item.id === modifier ? { ...item, used: true } : item) }, history: addHistory(state.history, turn, `${MODIFIERS[modifier].name} · ${square}`), selectedModifier: undefined, selectedSquare: undefined, notice: `${MODIFIERS[modifier].name} ativada.` };
     }
     if (!state.selectedSquare) {
       if (!piece || piece.color !== turn) return { notice: "Selecione uma peça do jogador atual." };
@@ -120,7 +120,7 @@ export const useGameStore = create<GameState>()(persist((set, get) => ({
       const unused = current.modifiers[color].filter((item) => !item.used); const pawns = SQUARES.filter((sq) => before.get(sq)?.color === color && before.get(sq)?.type === "p");
       if (unused.length && pawns.length && Math.random() < .28) {
         const card = unused[Math.floor(Math.random() * unused.length)]; const square = pawns[Math.floor(Math.random() * pawns.length)]; const evolved = transformPawn(current.fen, square, MODIFIERS[card.id].type);
-        if (evolved.ok && evolved.fen) { set((latest) => ({ fen: evolved.fen!, modifiers: { ...latest.modifiers, [color]: latest.modifiers[color].map((item) => item.id === card.id ? { ...item, used: true } : item) }, history: addHistory(latest.history, color, `${MODIFIERS[card.id].glyph} Evolução · ${square}`), aiThinking: false, notice: "O rival evoluiu um peão." })); return; }
+        if (evolved.ok && evolved.fen) { set((latest) => ({ fen: evolved.fen!, modifiers: { ...latest.modifiers, [color]: latest.modifiers[color].map((item) => item.id === card.id ? { ...item, used: true } : item) }, history: addHistory(latest.history, color, `Evolução · ${square}`), aiThinking: false, notice: "O rival evoluiu um peão." })); return; }
       }
       const choice = chooseAiAction(current.fen, current.config.difficulty, current.hands[color], current.effects);
       if (!choice) {

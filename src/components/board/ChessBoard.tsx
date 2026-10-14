@@ -1,13 +1,9 @@
-import { Chess, type Color, type PieceSymbol, type Square } from "chess.js";
+import { Chess, type PieceSymbol } from "chess.js";
 import { motion } from "motion/react";
 import { Shield, Swords } from "lucide-react";
 import { SQUARES } from "../../game/engine/engine";
 import { useGameStore, useLegalTargets } from "../../store/gameStore";
-
-const PIECES: Record<Color, Record<PieceSymbol, string>> = {
-  w: { k: "♚", q: "♛", r: "♜", b: "♝", n: "♞", p: "♟" },
-  b: { k: "♚", q: "♛", r: "♜", b: "♝", n: "♞", p: "♟" },
-};
+import { ChessPiece } from "./ChessPiece";
 
 const NAMES: Record<PieceSymbol, string> = { k: "rei", q: "dama", r: "torre", b: "bispo", n: "cavalo", p: "peão" };
 
@@ -59,13 +55,13 @@ export function ChessBoard() {
               {piece && (
                 <motion.span
                   key={`${piece.color}-${piece.type}-${square}`}
-                  className={`piece piece-${piece.color}`}
+                  className="piece"
                   aria-hidden="true"
                   initial={!reducedMotion && lastMove?.to === square ? { opacity: 0, scale: .55, filter: "blur(4px)" } : false}
                   animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                   transition={{ type: "spring", duration: .3, bounce: 0 }}
                 >
-                  {PIECES[piece.color][piece.type]}
+                  <ChessPiece type={piece.type} color={piece.color} />
                 </motion.span>
               )}
               {isTarget && <span className={isCapture ? "capture-ring" : "move-dot"} aria-hidden="true" />}
