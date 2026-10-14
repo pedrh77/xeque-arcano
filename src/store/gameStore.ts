@@ -6,15 +6,16 @@ import { chooseAiAction } from "../game/ai/ai";
 import { ABILITIES, drawAbilities } from "../game/abilities/registry";
 import { executeSpecialAction, gameStatus, legalMoves, resolveClassicMove, SQUARES, transformPawn, validSpecialTargets } from "../game/engine/engine";
 import type { AbilityId, AbilityState, BoardPiece, HistoryEntry, MatchConfig, ModifierId, ModifierState, PersistentEffect, Screen, SpecialAction } from "../game/models/types";
+import { assetUrl } from "../config/assets";
 
 export const POWER_START_FEN = "4k3/pppppppp/8/8/8/8/PPPPPPPP/4K3 w - - 0 1";
 
 export const MODIFIERS: Record<ModifierId, { name: string; glyph: string; image: string; type: "q" | "r" | "b" | "n"; description: string }> = {
-  queen: { name: "Coroa da Rainha", glyph: "♕", image: "/assets/modifiers/queen.png", type: "q", description: "Transforma um peão em rainha." },
-  knight: { name: "Salto do Cavalo", glyph: "♘", image: "/assets/modifiers/knight.png", type: "n", description: "Transforma um peão em cavalo." },
-  rook: { name: "Muralha da Torre", glyph: "♖", image: "/assets/modifiers/rook.png", type: "r", description: "Transforma um peão em torre." },
-  bishop: { name: "Olhar do Bispo", glyph: "♗", image: "/assets/modifiers/bishop.png", type: "b", description: "Transforma um peão em bispo." },
-  wild: { name: "Coringa Arcano", glyph: "✦", image: "/assets/modifiers/wild.png", type: "q", description: "Transforma um peão em rainha instável." },
+  queen: { name: "Coroa da Rainha", glyph: "♕", image: assetUrl("assets/modifiers/queen.png"), type: "q", description: "Transforma um peão em rainha." },
+  knight: { name: "Salto do Cavalo", glyph: "♘", image: assetUrl("assets/modifiers/knight.png"), type: "n", description: "Transforma um peão em cavalo." },
+  rook: { name: "Muralha da Torre", glyph: "♖", image: assetUrl("assets/modifiers/rook.png"), type: "r", description: "Transforma um peão em torre." },
+  bishop: { name: "Olhar do Bispo", glyph: "♗", image: assetUrl("assets/modifiers/bishop.png"), type: "b", description: "Transforma um peão em bispo." },
+  wild: { name: "Coringa Arcano", glyph: "✦", image: assetUrl("assets/modifiers/wild.png"), type: "q", description: "Transforma um peão em rainha instável." },
 };
 
 const DEFAULT_MODIFIERS: ModifierId[] = ["queen", "knight", "rook"];

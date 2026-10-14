@@ -7,6 +7,7 @@ import { AbilityCard } from "./components/abilities/AbilityCard";
 import { ABILITIES, ABILITY_LIST } from "./game/abilities/registry";
 import type { Difficulty, ModifierId } from "./game/models/types";
 import { MODIFIERS, useGameStore } from "./store/gameStore";
+import { assetUrl } from "./config/assets";
 
 function Brand() {
   return <div className="brand"><span className="brand-gem">♙</span><span><strong>PAWN</strong><em>STORM</em></span></div>;
@@ -26,9 +27,9 @@ function Menu() {
         <div className="rule-pills"><span><b>8</b> peões</span><span><b>3</b> evoluções</span><span><b>5</b> poderes</span></div>
       </motion.div>
       <motion.div className="hero-cards" initial={{ opacity: 0, scale: .9 }} animate={{ opacity: 1, scale: 1 }}>
-        <article className="splash-card card-a"><img src="/assets/powers/onda-de-impacto.png" alt="Onda de Impacto" /><span>Onda de Impacto</span></article>
-        <article className="splash-card card-b"><img src="/assets/powers/pacto-de-protecao.png" alt="Pacto de Proteção" /><span>Pacto de Proteção</span></article>
-        <article className="splash-card card-c"><img src="/assets/powers/golpe-arcano.png" alt="Golpe Arcano" /><span>Golpe Arcano</span></article>
+        <article className="splash-card card-a"><img src={assetUrl("assets/powers/onda-de-impacto.png")} alt="Onda de Impacto" /><span>Onda de Impacto</span></article>
+        <article className="splash-card card-b"><img src={assetUrl("assets/powers/pacto-de-protecao.png")} alt="Pacto de Proteção" /><span>Pacto de Proteção</span></article>
+        <article className="splash-card card-c"><img src={assetUrl("assets/powers/golpe-arcano.png")} alt="Golpe Arcano" /><span>Golpe Arcano</span></article>
       </motion.div>
     </section>
   </main>;
