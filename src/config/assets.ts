@@ -1,0 +1,18 @@
+export const ABILITY_ASSETS = {
+  doubleJump: "/assets/powers/salto-duplo.png",
+  ghostStep: "/assets/powers/passo-fantasma.png",
+  invertedKnight: "/assets/powers/onda-de-choque.png",
+  charge: "/assets/powers/investida-arcana.png",
+  freeMovement: "/assets/powers/ascensao.png",
+  teleport: "/assets/powers/teletransporte.png",
+  diagonalDance: "/assets/powers/danca-diagonal.png",
+  kingStep: "/assets/powers/escudo-prismatico.png",
+  divineShield: "/assets/powers/escudo-cristalino.png",
+  counterAttack: "/assets/powers/contra-golpe.png",
+  arcaneStrike: "/assets/powers/golpe-arcano.png",
+  pawnEcho: "/assets/powers/eco-do-peao.png",
+  royalGuard: "/assets/powers/guarda-real.png",
+  shockwave: "/assets/powers/onda-de-impacto.png",
+  sacrificeWard: "/assets/powers/pacto-de-protecao.png",
+  phaseDiagonal: "/assets/powers/corte-espectral.png",
+} as const;

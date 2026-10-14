@@ -1,0 +1,27 @@
+import { ABILITY_ASSETS } from "../../config/assets";
+import type { AbilityDefinition, AbilityId } from "../models/types";
+
+export const ABILITIES: Record<AbilityId, AbilityDefinition> = {
+  doubleJump: { id: "doubleJump", name: "Salto Duplo", description: "Dois saltos consecutivos de cavalo.", details: "A peça salta duas vezes em L. O motor escolhe um trajeto intermediário legal e protege o rei.", category: "Movimento", rarity: "Épica", image: ABILITY_ASSETS.doubleJump, targetType: "piece-destination", maxUses: 1 },
+  ghostStep: { id: "ghostStep", name: "Passo Fantasma", description: "Cruze peças em linha reta.", details: "Move na horizontal ou vertical, ignora obstáculos intermediários e valida a casa final.", category: "Movimento", rarity: "Rara", image: ABILITY_ASSETS.ghostStep, targetType: "piece-destination", maxUses: 1 },
+  invertedKnight: { id: "invertedKnight", name: "Troca Quântica", description: "Troque duas peças aliadas em L.", details: "Dobra o tabuleiro e troca duas peças aliadas separadas por um salto de cavalo.", category: "Posicionamento", rarity: "Rara", image: ABILITY_ASSETS.invertedKnight, targetType: "piece-destination", maxUses: 1 },
+  charge: { id: "charge", name: "Investida Arcana", description: "Avance até três casas em linha reta.", details: "Uma trilha de energia lança a peça para frente. Obstáculos ainda bloqueiam.", category: "Ataque", rarity: "Comum", image: ABILITY_ASSETS.charge, targetType: "piece-destination", maxUses: 1 },
+  freeMovement: { id: "freeMovement", name: "Passo Livre", description: "Mova para qualquer casa adjacente.", details: "A peça ganha um passo em qualquer uma das oito direções.", category: "Movimento", rarity: "Comum", image: ABILITY_ASSETS.freeMovement, targetType: "piece-destination", maxUses: 1 },
+  teleport: { id: "teleport", name: "Teletransporte", description: "Vá a uma casa vazia próxima.", details: "Transporta para uma casa vazia dentro do alcance configurado.", category: "Movimento", rarity: "Lendária", image: ABILITY_ASSETS.teleport, targetType: "piece-destination", maxUses: 1 },
+  diagonalDance: { id: "diagonalDance", name: "Dança Diagonal", description: "Dois deslocamentos diagonais.", details: "Executa dois passos diagonais consecutivos por um trajeto livre.", category: "Movimento", rarity: "Épica", image: ABILITY_ASSETS.diagonalDance, targetType: "piece-destination", maxUses: 1 },
+  kingStep: { id: "kingStep", name: "Resgate Real", description: "Troque uma peça com seu rei.", details: "Dobra o espaço e troca uma peça aliada com o rei para escapar ou reposicionar.", category: "Posicionamento", rarity: "Lendária", image: ABILITY_ASSETS.kingStep, targetType: "piece-destination", maxUses: 1 },
+  divineShield: { id: "divineShield", name: "Escudo Cristalino", description: "Anule uma tentativa de captura.", details: "A primeira captura contra a peça protegida estilhaça a barreira e é anulada.", category: "Defesa", rarity: "Épica", image: ABILITY_ASSETS.divineShield, targetType: "piece", maxUses: 1 },
+  counterAttack: { id: "counterAttack", name: "Contra-golpe", description: "Neutralize o atacante.", details: "A primeira captura é refletida e remove o agressor do tabuleiro.", category: "Defesa / Ataque", rarity: "Lendária", image: ABILITY_ASSETS.counterAttack, targetType: "piece", maxUses: 1 },
+  arcaneStrike: { id: "arcaneStrike", name: "Golpe Arcano", description: "Elimine um inimigo a até duas casas.", details: "A peça dispara energia sem sair do lugar. Reis não podem ser alvejados.", category: "Ataque", rarity: "Épica", image: ABILITY_ASSETS.arcaneStrike, targetType: "piece-destination", maxUses: 1 },
+  pawnEcho: { id: "pawnEcho", name: "Eco do Peão", description: "Duplique um peão numa casa adjacente.", details: "Cria uma cópia do peão em uma casa vazia vizinha, mantendo o original.", category: "Posicionamento", rarity: "Lendária", image: ABILITY_ASSETS.pawnEcho, targetType: "piece-destination", maxUses: 1 },
+  royalGuard: { id: "royalGuard", name: "Guarda Real", description: "Leve uma peça para perto do rei.", details: "Move uma peça aliada para qualquer casa vazia adjacente ao próprio rei.", category: "Defesa", rarity: "Rara", image: ABILITY_ASSETS.royalGuard, targetType: "piece-destination", maxUses: 1 },
+  shockwave: { id: "shockwave", name: "Onda de Impacto", description: "Empurre um inimigo adjacente.", details: "Empurra o alvo uma casa para longe da peça. A casa atrás dele precisa estar vazia.", category: "Posicionamento", rarity: "Rara", image: ABILITY_ASSETS.shockwave, targetType: "piece-destination", maxUses: 1 },
+  sacrificeWard: { id: "sacrificeWard", name: "Pacto de Proteção", description: "Sacrifique um peão para blindar o rei.", details: "Remove um peão aliado e dá ao rei um escudo contra a próxima captura.", category: "Defesa", rarity: "Épica", image: ABILITY_ASSETS.sacrificeWard, targetType: "piece", maxUses: 1 },
+  phaseDiagonal: { id: "phaseDiagonal", name: "Corte Espectral", description: "Atravesse peças pela diagonal.", details: "Move por qualquer distância diagonal, ignorando obstáculos intermediários.", category: "Movimento", rarity: "Rara", image: ABILITY_ASSETS.phaseDiagonal, targetType: "piece-destination", maxUses: 1 },
+};
+
+export const ABILITY_LIST = Object.values(ABILITIES);
+
+export function drawAbilities(count: number): AbilityId[] {
+  return [...ABILITY_LIST].sort(() => Math.random() - 0.5).slice(0, count).map((ability) => ability.id);
+}
