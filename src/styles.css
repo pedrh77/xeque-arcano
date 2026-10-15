@@ -169,11 +169,11 @@ body{background:#0a0e13}
 .round-button,.top-actions button{border-radius:4px;background:transparent}.round-button:hover,.top-actions button:hover{border-color:rgba(215,230,233,.3);background:#121a22}
 
 .hero{width:min(1380px,100%);min-height:calc(100svh - 68px);padding:clamp(42px,6vw,84px) clamp(22px,6vw,82px);grid-template-columns:minmax(330px,.78fr) minmax(480px,1.22fr);gap:clamp(48px,7vw,104px);overflow:visible}
-.hero-copy{align-self:center}
+.hero-copy{align-self:center;text-align:left}
 .hero h1,.draft-heading h1,.collection-shell>h1,.result-page h1{margin:0 0 25px;color:#f1eee6;font-size:clamp(3.5rem,6vw,6.75rem);line-height:.9;letter-spacing:-.035em;text-transform:none;text-wrap:balance}
 .hero h1 i,.draft-heading h1 i,.collection-shell>h1 i{color:#9bcbd2;text-shadow:none}
-.hero-copy>p{max-width:48ch;color:#99a5ad;font-size:1rem;line-height:1.65}
-.hero-actions{gap:10px;margin-top:30px;align-items:stretch}
+.hero-copy>p{max-width:48ch;margin-inline:0;color:#99a5ad;font-size:1rem;line-height:1.65}
+.hero-actions{gap:10px;margin-top:30px;align-items:stretch;justify-content:flex-start}
 .cta,.secondary{min-height:50px;padding-inline:19px;border-radius:4px;font-size:.82rem;transition:background-color 160ms ease,border-color 160ms ease,color 160ms ease,transform 160ms ease}
 .cta{color:#0b1318;background:#d4edf0;box-shadow:none}.cta:hover{transform:translateY(-1px);background:#edfafa;box-shadow:none}
 .secondary{color:#c1c9cd;border-color:rgba(211,228,231,.18);background:transparent}.secondary:hover{color:#fff;border-color:rgba(211,228,231,.38);background:#10171d}
@@ -243,7 +243,7 @@ body{background:#0a0e13}
 
 @media(max-width:680px){
   .topbar{height:58px}.topnav{gap:14px}
-  .hero{display:flex;min-height:auto;padding:44px 16px 56px;gap:38px;overflow:hidden}
+  .hero{display:flex;flex-direction:column;min-height:auto;padding:44px 16px 56px;gap:38px;overflow:hidden}
   .hero-copy{width:100%}.hero h1{font-size:clamp(2.8rem,14vw,4rem);line-height:.92}.hero-copy>p{max-width:36ch;font-size:.9rem;line-height:1.6}
   .hero-actions{display:grid;grid-template-columns:1fr 1fr}.hero-actions .cta{grid-column:1/-1}.hero-actions>*{width:auto}
   .hero-cards{width:calc(100% + 32px);height:430px;margin-inline:-16px;grid-template-columns:1fr 1.55fr;gap:5px}
