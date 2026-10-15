@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Chess } from "chess.js";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, BookOpen, Bot, ChevronLeft, ChevronRight, Crown, FlipHorizontal2, GraduationCap, RotateCcw, Sparkles, Swords, Users, X } from "lucide-react";
@@ -137,6 +137,6 @@ function Result() {
 
 export default function App() {
   const screen = useGameStore((s) => s.screen); const page = screen === "menu" ? <Menu /> : screen === "learn" ? <Learn /> : screen === "setup" ? <Setup /> : screen === "game" ? <Game /> : screen === "collection" ? <Collection /> : screen === "result" ? <Result /> : <Menu />;
-  useEffect(() => { document.documentElement.scrollTop = 0; document.body.scrollTop = 0; }, [screen]);
+  useLayoutEffect(() => { document.documentElement.scrollTop = 0; document.body.scrollTop = 0; }, [screen]);
   return <AnimatePresence mode="wait"><motion.div key={screen} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .18 }}>{page}</motion.div></AnimatePresence>;
 }
