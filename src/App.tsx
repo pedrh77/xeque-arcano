@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { Chess } from "chess.js";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowLeft, BookOpen, Bot, ChevronLeft, ChevronRight, Crown, FlipHorizontal2, GraduationCap, RotateCcw, Sparkles, Swords, Users, X } from "lucide-react";
 import { ChessBoard } from "./components/board/ChessBoard";
 import { AbilityCard } from "./components/abilities/AbilityCard";
@@ -14,6 +14,12 @@ import { ChessPiece } from "./components/board/ChessPiece";
 
 function Brand() {
   return <div className="brand"><span className="brand-gem"><ChessPiece type="p" color="b" className="brand-piece" /></span><span><strong>PAWN</strong><em>STORM</em></span></div>;
+}
+
+function useShouldReduceMotion() {
+  const savedPreference = useGameStore((state) => state.reducedMotion);
+  const systemPreference = useReducedMotion();
+  return savedPreference || Boolean(systemPreference);
 }
 
 function Menu() {
@@ -40,7 +46,7 @@ function Learn() {
   const [stepIndex, setStepIndex] = useState(0);
   const setScreen = useGameStore((s) => s.setScreen);
   const updateConfig = useGameStore((s) => s.updateConfig);
-  const reducedMotion = useGameStore((s) => s.reducedMotion);
+  const reducedMotion = useShouldReduceMotion();
   const lesson = TUTORIALS[lessonIndex];
   const step = lesson.steps[stepIndex];
   const chooseLesson = (index: number) => { setLessonIndex(index); setStepIndex(0); };
@@ -85,7 +91,7 @@ function Learn() {
 
 function Setup() {
   const config = useGameStore((s) => s.config); const toggle = useGameStore((s) => s.toggleConfigModifier); const update = useGameStore((s) => s.updateConfig); const start = useGameStore((s) => s.startGame); const setScreen = useGameStore((s) => s.setScreen);
-  const reducedMotion = useGameStore((s) => s.reducedMotion);
+  const reducedMotion = useShouldReduceMotion();
   const selected = config.selectedModifiers ?? ["queen", "knight", "rook"];
   const slots = Array.from({ length: 3 }, (_, index) => selected[index]);
   return <main className="draft-page">
@@ -98,8 +104,8 @@ function Setup() {
       </div>
       <div className="match-options">{config.opponent === "computer" ? <><span>Dificuldade</span><div className="segment">{(["easy", "medium", "hard"] as Difficulty[]).map((level) => <button key={level} aria-pressed={config.difficulty === level} className={config.difficulty === level ? "active" : ""} onClick={() => update({ difficulty: level })}>{level === "easy" ? "Leve" : level === "medium" ? "Tática" : "Brutal"}</button>)}</div></> : <><span>Partida local</span><small className="local-note">As brancas começam; passe o dispositivo a cada turno.</small></>}</div>
       <section className="draft-selection" aria-label="Evoluções escolhidas">
-        <div className="selection-heading"><span>Seu trio</span><b>{selected.length}/3</b><small>{selected.length === 3 ? "Pronto para jogar" : `Escolha mais ${3 - selected.length}`}</small></div>
-        <div className="selection-rack" role="status" aria-live="polite">{slots.map((id, index) => <div className="selection-slot-frame" key={index}>
+        <div className="selection-heading"><span>Seu trio</span><div className="selection-status" role="status" aria-live="polite"><b>{selected.length}/3</b><small>{selected.length === 3 ? "Pronto para jogar" : `Escolha mais ${3 - selected.length}`}</small></div></div>
+        <div className="selection-rack">{slots.map((id, index) => <div className="selection-slot-frame" key={index}>
           <AnimatePresence initial={false} mode="wait">{id ? <motion.button
             key={id}
             type="button"
@@ -110,7 +116,7 @@ function Setup() {
             animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
             exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: -10 }}
             transition={{ duration: reducedMotion ? .01 : .22, ease: "easeOut" }}
-          ><span>{index + 1}</span><img src={MODIFIERS[id].image} alt="" /><b>{MODIFIERS[id].name}</b><X aria-hidden="true" /></motion.button> : <motion.div key={`empty-${index}`} className="selection-slot empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }}><span>{index + 1}</span><small>Escolha uma evolução</small></motion.div>}</AnimatePresence>
+          ><span>{index + 1}</span><img src={MODIFIERS[id].image} alt="" /><b>{MODIFIERS[id].name}</b><X aria-hidden="true" /></motion.button> : <motion.div key={`empty-${index}`} className="selection-slot empty" initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: reducedMotion ? .01 : .18 }}><span>{index + 1}</span><small>Escolha uma evolução</small></motion.div>}</AnimatePresence>
         </div>)}</div>
       </section>
       <div className="modifier-grid">{(Object.entries(MODIFIERS) as [ModifierId, typeof MODIFIERS[ModifierId]][]).map(([id, item]) => {
@@ -125,7 +131,7 @@ function Setup() {
 }
 
 function Game() {
-  const fen = useGameStore((s) => s.fen); const config = useGameStore((s) => s.config); const notice = useGameStore((s) => s.notice); const thinking = useGameStore((s) => s.aiThinking); const reducedMotion = useGameStore((s) => s.reducedMotion); const runAi = useGameStore((s) => s.runAi); const restart = useGameStore((s) => s.restart); const resign = useGameStore((s) => s.resign); const flip = useGameStore((s) => s.toggleFlip);
+  const fen = useGameStore((s) => s.fen); const config = useGameStore((s) => s.config); const notice = useGameStore((s) => s.notice); const thinking = useGameStore((s) => s.aiThinking); const reducedMotion = useShouldReduceMotion(); const runAi = useGameStore((s) => s.runAi); const restart = useGameStore((s) => s.restart); const resign = useGameStore((s) => s.resign); const flip = useGameStore((s) => s.toggleFlip);
   const hands = useGameStore((s) => s.hands); const modifiers = useGameStore((s) => s.modifiers); const selectedAbility = useGameStore((s) => s.selectedAbility); const selectedModifier = useGameStore((s) => s.selectedModifier); const pending = useGameStore((s) => s.pendingAction); const selectAbility = useGameStore((s) => s.selectAbility); const selectModifier = useGameStore((s) => s.selectModifier); const confirm = useGameStore((s) => s.confirmAbility); const cancel = useGameStore((s) => s.cancelSelection); const history = useGameStore((s) => s.history);
   const chess = new Chess(fen); const turn = chess.turn(); const mine = config.opponent === "local" || turn === config.playerColor;
   const turnLabel = config.opponent === "local" ? `VEZ DAS ${turn === "w" ? "BRANCAS" : "PRETAS"}` : thinking ? "RIVAL PENSANDO" : mine ? "SUA VEZ" : "VEZ DO RIVAL";
@@ -158,7 +164,7 @@ function Result() {
 }
 
 export default function App() {
-  const screen = useGameStore((s) => s.screen); const page = screen === "menu" ? <Menu /> : screen === "learn" ? <Learn /> : screen === "setup" ? <Setup /> : screen === "game" ? <Game /> : screen === "collection" ? <Collection /> : screen === "result" ? <Result /> : <Menu />;
+  const screen = useGameStore((s) => s.screen); const reducedMotion = useShouldReduceMotion(); const page = screen === "menu" ? <Menu /> : screen === "learn" ? <Learn /> : screen === "setup" ? <Setup /> : screen === "game" ? <Game /> : screen === "collection" ? <Collection /> : screen === "result" ? <Result /> : <Menu />;
   useLayoutEffect(() => { document.documentElement.scrollTop = 0; document.body.scrollTop = 0; }, [screen]);
-  return <AnimatePresence mode="wait"><motion.div key={screen} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .18 }}>{page}</motion.div></AnimatePresence>;
+  return <AnimatePresence mode="wait"><motion.div className={reducedMotion ? "reduce-motion" : undefined} key={screen} initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reducedMotion ? .01 : .18 }}>{page}</motion.div></AnimatePresence>;
 }

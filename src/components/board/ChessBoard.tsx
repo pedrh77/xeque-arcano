@@ -1,5 +1,5 @@
 import { Chess, type PieceSymbol } from "chess.js";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { Shield, Swords } from "lucide-react";
 import { SQUARES } from "../../game/engine/engine";
 import { useGameStore, useLegalTargets } from "../../store/gameStore";
@@ -16,7 +16,8 @@ export function ChessBoard() {
   const lastMove = useGameStore((state) => state.lastMove);
   const effects = useGameStore((state) => state.effects);
   const pending = useGameStore((state) => state.pendingAction);
-  const reducedMotion = useGameStore((state) => state.reducedMotion);
+  const savedReducedMotion = useGameStore((state) => state.reducedMotion);
+  const reducedMotion = savedReducedMotion || Boolean(useReducedMotion());
   const selectSquare = useGameStore((state) => state.selectSquare);
   const targets = useLegalTargets();
   const chess = new Chess(fen);
