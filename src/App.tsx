@@ -19,15 +19,12 @@ function Brand() {
 function Menu() {
   const setScreen = useGameStore((s) => s.setScreen); const started = useGameStore((s) => s.started); const resume = useGameStore((s) => s.resumeGame);
   return <main className="landing">
-    <div className="storm-grid" />
     <header className="topbar"><Brand /><nav className="topnav" aria-label="Navegação principal"><button className="ghost-link" onClick={() => setScreen("learn")}>Aprenda</button><button className="ghost-link" onClick={() => setScreen("collection")}>Poderes</button></nav></header>
     <section className="hero">
       <motion.div className="hero-copy" initial={{ opacity: 0, x: -24 }} animate={{ opacity: 1, x: 0 }}>
-        <span className="eyebrow"><Sparkles /> Xadrez reinventado</span>
         <h1>Peões pequenos.<br /><i>Poderes absurdos.</i></h1>
         <p>Você tem um rei, oito peões e zero obrigação de jogar limpo. Evolua sua tropa, quebre as regras e derrube o rei rival.</p>
         <div className="hero-actions"><button className="cta" onClick={() => setScreen("setup")}><Swords /> Montar meu deck <ChevronRight /></button><button className="secondary" onClick={() => setScreen("learn")}><GraduationCap /> Aprender xadrez</button>{started && <button className="secondary" onClick={resume}>Continuar partida</button>}</div>
-        <div className="rule-pills"><span><b>8</b> peões</span><span><b>3</b> evoluções</span><span><b>5</b> poderes</span></div>
       </motion.div>
       <motion.div className="hero-cards" initial={{ opacity: 0, scale: .9 }} animate={{ opacity: 1, scale: 1 }}>
         <article className="splash-card card-a"><img src={assetUrl("assets/powers/onda-de-impacto.png")} alt="Onda de Impacto" /><span>Onda de Impacto</span></article>
@@ -92,7 +89,7 @@ function Setup() {
   return <main className="draft-page">
     <header className="topbar"><button className="round-button" onClick={() => setScreen("menu")} aria-label="Voltar"><ArrowLeft /></button><Brand /><span className="step-label">PREPARAÇÃO</span></header>
     <section className="draft-shell">
-      <div className="draft-heading"><span className="eyebrow">Prepare a partida</span><h1>Escolha como jogar e suas <i>3 evoluções</i></h1><p>Enfrente a máquina ou divida o tabuleiro com um amigo. Depois, monte o trio que transforma seus peões.</p></div>
+      <div className="draft-heading"><h1>Escolha como jogar e suas <i>3 evoluções</i></h1><p>Enfrente a máquina ou divida o tabuleiro com um amigo. Depois, monte o trio que transforma seus peões.</p></div>
       <div className="play-mode-picker" aria-label="Modo de jogo"><button className={config.opponent === "computer" ? "active" : ""} onClick={() => update({ opponent: "computer" })}><Bot /><span><b>Vs máquina</b><small>IA com três dificuldades</small></span></button><button className={config.opponent === "local" ? "active" : ""} onClick={() => update({ opponent: "local" })}><Users /><span><b>Vs jogador</b><small>Dois jogadores no mesmo dispositivo</small></span></button></div>
       <div className="modifier-grid">{(Object.entries(MODIFIERS) as [ModifierId, typeof MODIFIERS[ModifierId]][]).map(([id, item]) => {
         const active = selected.includes(id); const disabled = !active && selected.length >= 3;
@@ -130,12 +127,12 @@ function Game() {
 
 function Collection() {
   const setScreen = useGameStore((s) => s.setScreen);
-  return <main className="collection-page"><header className="topbar"><button className="round-button" onClick={() => setScreen("menu")}><ArrowLeft /></button><Brand /><span /></header><section className="collection-shell"><span className="eyebrow">Arsenal completo</span><h1>{ABILITY_LIST.length} formas de <i>quebrar o jogo</i></h1><div className="gallery">{ABILITY_LIST.map((ability) => <article key={ability.id}><img src={ability.image} alt="" /><span>{ability.rarity}</span><h2>{ability.name}</h2><p>{ability.description}</p></article>)}</div></section></main>;
+  return <main className="collection-page"><header className="topbar"><button className="round-button" onClick={() => setScreen("menu")}><ArrowLeft /></button><Brand /><span /></header><section className="collection-shell"><h1>{ABILITY_LIST.length} formas de <i>quebrar o jogo</i></h1><div className="gallery">{ABILITY_LIST.map((ability) => <article key={ability.id}><img src={ability.image} alt="" /><span>{ability.rarity}</span><h2>{ability.name}</h2><p>{ability.description}</p></article>)}</div></section></main>;
 }
 
 function Result() {
   const result = useGameStore((s) => s.result); const restart = useGameStore((s) => s.restart); const setScreen = useGameStore((s) => s.setScreen);
-  return <main className="result-page"><span className="result-piece"><Crown /></span><span className="eyebrow">Fim da tempestade</span><h1>{result?.title ?? "Partida encerrada"}</h1><p>{result?.detail}</p><div className="hero-actions"><button className="cta" onClick={restart}><RotateCcw /> Jogar de novo</button><button className="secondary" onClick={() => setScreen("menu")}>Menu</button></div></main>;
+  return <main className="result-page"><span className="result-piece"><Crown /></span><h1>{result?.title ?? "Partida encerrada"}</h1><p>{result?.detail}</p><div className="hero-actions"><button className="cta" onClick={restart}><RotateCcw /> Jogar de novo</button><button className="secondary" onClick={() => setScreen("menu")}>Menu</button></div></main>;
 }
 
 export default function App() {
