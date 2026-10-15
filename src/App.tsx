@@ -137,5 +137,6 @@ function Result() {
 
 export default function App() {
   const screen = useGameStore((s) => s.screen); const page = screen === "menu" ? <Menu /> : screen === "learn" ? <Learn /> : screen === "setup" ? <Setup /> : screen === "game" ? <Game /> : screen === "collection" ? <Collection /> : screen === "result" ? <Result /> : <Menu />;
+  useEffect(() => { document.documentElement.scrollTop = 0; document.body.scrollTop = 0; }, [screen]);
   return <AnimatePresence mode="wait"><motion.div key={screen} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .18 }}>{page}</motion.div></AnimatePresence>;
 }
