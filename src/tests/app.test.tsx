@@ -28,4 +28,18 @@ describe("navegação e modos de jogo", () => {
     expect(useGameStore.getState().config.opponent).toBe("local");
     expect(screen.getByText(/passe o dispositivo a cada turno/i)).toBeInTheDocument();
   });
+
+  it("mostra três espaços e permite remontar o trio", () => {
+    useGameStore.setState({ screen: "setup" });
+    render(<App />);
+
+    expect(screen.getByRole("region", { name: /evoluções escolhidas/i })).toHaveTextContent("3/3");
+    fireEvent.click(screen.getByRole("button", { name: /remover coroa da rainha/i }));
+    expect(useGameStore.getState().config.selectedModifiers).toEqual(["knight", "rook"]);
+    expect(screen.getByRole("button", { name: /sortear 5 poderes e jogar/i })).toBeDisabled();
+
+    fireEvent.click(screen.getByRole("button", { name: /olhar do bispo/i }));
+    expect(useGameStore.getState().config.selectedModifiers).toEqual(["knight", "rook", "bishop"]);
+    expect(screen.getByRole("button", { name: /sortear 5 poderes e jogar/i })).toBeEnabled();
+  });
 });

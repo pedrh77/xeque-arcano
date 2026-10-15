@@ -26,11 +26,11 @@ function Menu() {
         <p>Você tem um rei, oito peões e zero obrigação de jogar limpo. Evolua sua tropa, quebre as regras e derrube o rei rival.</p>
         <div className="hero-actions"><button className="cta" onClick={() => setScreen("setup")}><Swords /> Montar meu deck <ChevronRight /></button><button className="secondary" onClick={() => setScreen("learn")}><GraduationCap /> Aprender xadrez</button>{started && <button className="secondary" onClick={resume}>Continuar partida</button>}</div>
       </motion.div>
-      <motion.div className="hero-cards" initial={{ opacity: 0, scale: .9 }} animate={{ opacity: 1, scale: 1 }}>
+      <div className="hero-cards">
         <article className="splash-card card-a"><img src={assetUrl("assets/powers/onda-de-impacto.png")} alt="Onda de Impacto" /><span>Onda de Impacto</span></article>
         <article className="splash-card card-b"><img src={assetUrl("assets/powers/pacto-de-protecao.png")} alt="Pacto de Proteção" /><span>Pacto de Proteção</span></article>
         <article className="splash-card card-c"><img src={assetUrl("assets/powers/golpe-arcano.png")} alt="Golpe Arcano" /><span>Golpe Arcano</span></article>
-      </motion.div>
+      </div>
     </section>
   </main>;
 }
@@ -85,19 +85,41 @@ function Learn() {
 
 function Setup() {
   const config = useGameStore((s) => s.config); const toggle = useGameStore((s) => s.toggleConfigModifier); const update = useGameStore((s) => s.updateConfig); const start = useGameStore((s) => s.startGame); const setScreen = useGameStore((s) => s.setScreen);
+  const reducedMotion = useGameStore((s) => s.reducedMotion);
   const selected = config.selectedModifiers ?? ["queen", "knight", "rook"];
+  const slots = Array.from({ length: 3 }, (_, index) => selected[index]);
   return <main className="draft-page">
     <header className="topbar"><button className="round-button" onClick={() => setScreen("menu")} aria-label="Voltar"><ArrowLeft /></button><Brand /><span className="step-label">PREPARAÇÃO</span></header>
     <section className="draft-shell">
       <div className="draft-heading"><h1>Escolha como jogar e suas <i>3 evoluções</i></h1><p>Enfrente a máquina ou divida o tabuleiro com um amigo. Depois, monte o trio que transforma seus peões.</p></div>
-      <div className="play-mode-picker" aria-label="Modo de jogo"><button className={config.opponent === "computer" ? "active" : ""} onClick={() => update({ opponent: "computer" })}><Bot /><span><b>Vs máquina</b><small>IA com três dificuldades</small></span></button><button className={config.opponent === "local" ? "active" : ""} onClick={() => update({ opponent: "local" })}><Users /><span><b>Vs jogador</b><small>Dois jogadores no mesmo dispositivo</small></span></button></div>
+      <div className="play-mode-picker" aria-label="Modo de jogo">
+        <button aria-pressed={config.opponent === "computer"} className={config.opponent === "computer" ? "active" : ""} onClick={() => update({ opponent: "computer" })}><Bot /><span><b>Vs máquina</b><small>IA com três dificuldades</small></span>{config.opponent === "computer" && <motion.i layoutId="mode-indicator" className="mode-indicator" transition={{ duration: reducedMotion ? 0 : .24 }} />}</button>
+        <button aria-pressed={config.opponent === "local"} className={config.opponent === "local" ? "active" : ""} onClick={() => update({ opponent: "local" })}><Users /><span><b>Vs jogador</b><small>Dois jogadores no mesmo dispositivo</small></span>{config.opponent === "local" && <motion.i layoutId="mode-indicator" className="mode-indicator" transition={{ duration: reducedMotion ? 0 : .24 }} />}</button>
+      </div>
+      <div className="match-options">{config.opponent === "computer" ? <><span>Dificuldade</span><div className="segment">{(["easy", "medium", "hard"] as Difficulty[]).map((level) => <button key={level} aria-pressed={config.difficulty === level} className={config.difficulty === level ? "active" : ""} onClick={() => update({ difficulty: level })}>{level === "easy" ? "Leve" : level === "medium" ? "Tática" : "Brutal"}</button>)}</div></> : <><span>Partida local</span><small className="local-note">As brancas começam; passe o dispositivo a cada turno.</small></>}</div>
+      <section className="draft-selection" aria-label="Evoluções escolhidas">
+        <div className="selection-heading"><span>Seu trio</span><b>{selected.length}/3</b><small>{selected.length === 3 ? "Pronto para jogar" : `Escolha mais ${3 - selected.length}`}</small></div>
+        <div className="selection-rack" role="status" aria-live="polite">{slots.map((id, index) => <div className="selection-slot-frame" key={index}>
+          <AnimatePresence initial={false} mode="wait">{id ? <motion.button
+            key={id}
+            type="button"
+            className="selection-slot filled"
+            aria-label={`Remover ${MODIFIERS[id].name}`}
+            onClick={() => toggle(id)}
+            initial={reducedMotion ? false : { opacity: 0, x: 18, filter: "blur(5px)" }}
+            animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+            exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: -10 }}
+            transition={{ duration: reducedMotion ? .01 : .22, ease: "easeOut" }}
+          ><span>{index + 1}</span><img src={MODIFIERS[id].image} alt="" /><b>{MODIFIERS[id].name}</b><X aria-hidden="true" /></motion.button> : <motion.div key={`empty-${index}`} className="selection-slot empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }}><span>{index + 1}</span><small>Escolha uma evolução</small></motion.div>}</AnimatePresence>
+        </div>)}</div>
+      </section>
       <div className="modifier-grid">{(Object.entries(MODIFIERS) as [ModifierId, typeof MODIFIERS[ModifierId]][]).map(([id, item]) => {
-        const active = selected.includes(id); const disabled = !active && selected.length >= 3;
-        return <button key={id} className={`modifier-choice ${active ? "active" : ""}`} disabled={disabled} onClick={() => toggle(id)}>
-          <img className="modifier-art" src={item.image} alt="" loading="lazy" decoding="async" /><span className="pick-count">{active ? "✓ escolhida" : "selecionar"}</span><strong>{item.name}</strong><small>{item.description}</small>
+        const selectedIndex = selected.indexOf(id); const active = selectedIndex >= 0; const disabled = !active && selected.length >= 3;
+        return <button key={id} aria-pressed={active} className={`modifier-choice ${active ? "active" : ""}`} disabled={disabled} onClick={() => toggle(id)}>
+          <img className="modifier-art" src={item.image} alt="" loading="lazy" decoding="async" /><span className="pick-count">{active ? `${selectedIndex + 1}ª escolha` : disabled ? "trio completo" : "adicionar"}</span><strong>{item.name}</strong><small>{item.description}</small>
         </button>;
       })}</div>
-      <div className="draft-footer"><div>{config.opponent === "computer" ? <><span>Dificuldade</span><div className="segment">{(["easy", "medium", "hard"] as Difficulty[]).map((level) => <button key={level} className={config.difficulty === level ? "active" : ""} onClick={() => update({ difficulty: level })}>{level === "easy" ? "Leve" : level === "medium" ? "Tática" : "Brutal"}</button>)}</div></> : <><span>Partida local</span><small className="local-note">As brancas começam; passe o dispositivo a cada turno.</small></>}</div><button className="cta" disabled={selected.length !== 3} onClick={start}>Sortear 5 poderes e jogar <ChevronRight /></button></div>
+      <div className="draft-footer"><p>{selected.length === 3 ? "Trio definido. Os 5 poderes serão sorteados ao iniciar." : "Preencha os três espaços para começar."}</p><button className="cta" disabled={selected.length !== 3} onClick={start}>Sortear 5 poderes e jogar <ChevronRight /></button></div>
     </section>
   </main>;
 }
